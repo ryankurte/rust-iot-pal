@@ -21,7 +21,7 @@ pub struct CoapClient {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct CoapOptions {
     #[cfg_attr(feature = "structopt", structopt(long))]
-    /// URL for CoAP server
+    /// URL for CoAP server (prefixed with coap://)
     pub coap_url: String,
 
     #[cfg_attr(feature = "structopt", structopt(flatten))]
@@ -93,7 +93,7 @@ impl ClientSub for CoapClient {
 
 /// Stream implementation for CoapSub
 impl Stream for CoapClient {
-    type Item = Vec<u8>;
+    type Item = (String, Vec<u8>);
 
     fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context) -> Poll<Option<Self::Item>> {
         for s in &mut self.subs {
@@ -103,7 +103,7 @@ impl Stream for CoapClient {
                 Poll::Pending => continue,
             };
 
-            return Poll::Ready(Some(m.message.payload))
+            return Poll::Ready(Some( (s.topic().to_string(), m.message.payload)) )
         }
 
         Poll::Pending

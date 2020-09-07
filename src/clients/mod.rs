@@ -33,7 +33,7 @@ pub trait ClientPub {
 
 /// Abstract client subscribe trait, allows subscription and streaming of data
 #[async_trait]
-pub trait ClientSub: Stream<Item = Vec<u8>> {
+pub trait ClientSub: Stream<Item = (String, Vec<u8>)> {
     /// Subscribe to a topic / resource / endpoint
     async fn subscribe(&mut self, topic: &str) -> Result<()>;
 

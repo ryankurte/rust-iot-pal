@@ -28,18 +28,28 @@ structopt = { version = "0.3.17", optional = true }
 serde = { version = "1.0.115", features = [ "derive" ], optional = true }
 
 tokio = { version = "0.2.22", optional = true }
-paho-mqtt = { version = "0.8.0", optional = true }
-coap = { version = "0.8.1", optional = true }
 elastic = { version = "0.21.0-pre.5", features = [ "rustls-tls" ], optional = true }
 serde_json = { version = "1.0.57", optional = true }
 reqwest = { version = "0.9.24", features = [ "rustls-tls" ], optional = true }
 base64 = { version = "0.12.3", optional = true }
 
+[dependencies.coap]
+version = "0.8.0"
+#git = "https://github.com/ryankurte/coap-rs"
+#branch = "feature/async-client"
+path = "../forks/coap-rs"
+optional = true
+
+[dependencies.paho-mqtt]
+version = "0.8.0"
+git = "https://github.com/ryankurte/paho.mqtt.rust"
+branch = "develop-fix-persistence"
+optional = true
 
 #TODO: more functional client maybe?
 #elasticsearch = { version = "*", optional = true }
 
 
 [patch.crates-io]
-paho-mqtt = { git = "https://github.com/ryankurte/paho.mqtt.rust", branch = "develop-fix-persistence" }
-coap = { git = "https://github.com/ryankurte/coap-rs", branch = "feature/async-client" }
+#paho-mqtt = { git = "https://github.com/ryankurte/paho.mqtt.rust", branch = "develop-fix-persistence" }
+#coap = { path = "../forks/coap-rs" }

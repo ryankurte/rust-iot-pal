@@ -24,7 +24,7 @@ pub struct MqttClient {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct MqttOptions {
     #[cfg_attr(feature = "structopt", structopt(long))]
-    /// URL for MQTT server for base broker connection
+    /// URL for MQTT server for base broker connection (prefixed by ssl:// or tcp://)
     pub mqtt_url: String,
 
     #[cfg_attr(feature = "structopt", structopt(long))]
@@ -146,14 +146,16 @@ impl ClientSub for MqttClient {
 
 /// Impl stream for ClientSub
 impl Stream for MqttClient {
-    type Item = Vec<u8>;
+    type Item = (String, Vec<u8>);
 
     fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context) -> Poll<Option<Self::Item>> {
-        match self.rx.poll_next_unpin(cx) {
-            Poll::Ready(Some(Some(m))) =>Poll::Ready(Some( m.payload().to_vec() )),
-            Poll::Ready(_) => Poll::Ready(None),
-            Poll::Pending => Poll::Pending,
-        }
+        let m = match self.rx.poll_next_unpin(cx) {
+            Poll::Ready(Some(Some(m))) => m,
+            Poll::Ready(_) => return Poll::Ready(None),
+            Poll::Pending => return Poll::Pending,
+        };
+
+        Poll::Ready(Some( (m.topic().to_string(), m.payload().to_vec()) ))
     }
 }
 
