@@ -45,6 +45,36 @@ impl From<&str> for ElasticOptions {
     }
 }
 
+impl From<(&str, UserOptions)> for ElasticOptions {
+    fn from(o: (&str, UserOptions)) -> Self {
+        Self {
+            es_url: o.0.to_string(),
+            tls_opts: Default::default(),
+            user_opts: o.1,
+        }
+    }
+}
+
+impl From<(&str, TlsOptions)> for ElasticOptions {
+    fn from(o: (&str, TlsOptions)) -> Self {
+        Self {
+            es_url: o.0.to_string(),
+            tls_opts: o.1,
+            user_opts: Default::default(),
+        }
+    }
+}
+
+impl From<(&str, UserOptions, TlsOptions)> for ElasticOptions {
+    fn from(o: (&str, UserOptions, TlsOptions)) -> Self {
+        Self {
+            es_url: o.0.to_string(),
+            tls_opts: o.2,
+            user_opts: o.1,
+        }
+    }
+}
+
 impl ElasticStore {
     /// Create a new ElasticStore with the provided options
     pub fn new<O: Into<ElasticOptions>>(opts: O) -> Result<Self, Error> {

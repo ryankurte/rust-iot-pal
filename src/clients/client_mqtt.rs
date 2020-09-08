@@ -35,20 +35,41 @@ pub struct MqttOptions {
     pub tls_opts: TlsOptions,
 }
 
-impl Into<MqttOptions> for &str {
-    fn into(self) -> MqttOptions {
-        MqttOptions {
-            mqtt_url: self.to_string(),
+/// Create MqttOptions from a connection URL
+impl From<&str> for MqttOptions {
+    fn from(url: &str) -> Self {
+        Self {
+            mqtt_url: url.to_string(),
             mqtt_id: None,
             tls_opts: Default::default(),
         }
     }
 }
 
+/// Create MqttOptions from a connection URL and SSL options
+impl From<(&str, TlsOptions)> for MqttOptions {
+    fn from(c: (&str, TlsOptions)) -> Self {
+        Self {
+            mqtt_url: c.0.to_string(),
+            mqtt_id: None,
+            tls_opts: c.1,
+        }
+    }
+}
+
+impl From<(String, TlsOptions)> for MqttOptions {
+    fn from(c: (String, TlsOptions)) -> Self {
+        Self {
+            mqtt_url: c.0,
+            mqtt_id: None,
+            tls_opts: c.1,
+        }
+    }
+}
 
 impl MqttClient {
     /// Create a new client using the provided options
-    pub async fn new<O: Into<MqttOptions>>(&self, opts: O) -> Result<MqttClient, Error> {
+    pub async fn new<O: Into<MqttOptions>>(opts: O) -> Result<MqttClient, Error> {
         let o = opts.into();
 
         debug!("MQTT client connect opts: {:?}", o);
@@ -158,7 +179,6 @@ impl Stream for MqttClient {
         Poll::Ready(Some( (m.topic().to_string(), m.payload().to_vec()) ))
     }
 }
-
 
 #[async_trait]
 impl ClientPub for MqttClient {
