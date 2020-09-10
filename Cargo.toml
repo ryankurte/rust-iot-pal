@@ -35,9 +35,8 @@ base64 = { version = "0.12.3", optional = true }
 
 [dependencies.coap]
 version = "0.8.0"
-#git = "https://github.com/ryankurte/coap-rs"
-#branch = "feature/async-client"
-path = "../forks/coap-rs"
+git = "https://github.com/ryankurte/coap-rs"
+branch = "feature/async-client"
 optional = true
 
 [dependencies.paho-mqtt]
