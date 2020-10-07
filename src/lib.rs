@@ -1,5 +1,9 @@
 //! IoT Protocol Abstraction Library
 
+use std::path::Path;
+
+use anyhow::Error;
+
 pub mod clients;
 
 pub mod stores;
@@ -30,6 +34,34 @@ impl Default for TlsOptions {
             tls_cert_file: None,
             tls_key_file: None,
         }
+    }
+}
+
+impl TlsOptions {
+    pub fn validate(&self) -> Result<(), anyhow::Error> {
+
+        match &self.tls_ca_file {
+            Some(f) if !Path::new(f).exists() => {
+                return Err(Error::msg(format!("Could not access TLS CA file: {}", f)))
+            }
+            _ => (),
+        }
+
+        match &self.tls_cert_file {
+            Some(f) if !Path::new(f).exists() => {
+                return Err(Error::msg(format!("Could not access TLS cert file: {}", f)))
+            }
+            _ => (),
+        }
+
+        match &self.tls_key_file {
+            Some(f) if !Path::new(f).exists() => {
+                return Err(Error::msg(format!("Could not access TLS key file: {}", f)))
+            }
+            _ => (),
+        }
+
+        Ok(())
     }
 }
 

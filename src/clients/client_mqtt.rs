@@ -88,9 +88,13 @@ impl MqttClient {
         // Setup TLS
         let mut tls_options = None;
 
+        // Check listed files are accessible
+        o.tls_opts.validate()?;
+
         // Set TLS CA file if provided
         if let Some(ca_file) = &o.tls_opts.tls_ca_file {
             let mut tls_opts = paho_mqtt::SslOptionsBuilder::new();
+
             tls_opts.trust_store(ca_file)?;
             tls_options = Some(tls_opts);
         }

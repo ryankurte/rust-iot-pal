@@ -45,9 +45,6 @@ git = "https://github.com/ryankurte/paho.mqtt.rust"
 branch = "develop-fix-persistence"
 optional = true
 
-#TODO: more functional client maybe?
-#elasticsearch = { version = "*", optional = true }
-
 
 [patch.crates-io]
 #paho-mqtt = { git = "https://github.com/ryankurte/paho.mqtt.rust", branch = "develop-fix-persistence" }
