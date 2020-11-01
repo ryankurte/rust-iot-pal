@@ -1,6 +1,7 @@
 //! IoT Protocol Abstraction Library
 
 use std::path::Path;
+use std::ffi::OsString;
 
 use anyhow::Error;
 
@@ -16,15 +17,15 @@ pub mod stores;
 pub struct TlsOptions {
     #[cfg_attr(feature = "structopt", structopt(long, env))]
     /// TLS Certiciate Authority (CA) file in PEM format
-    pub tls_ca_file: Option<String>,
+    pub tls_ca_file: Option<OsString>,
 
     #[cfg_attr(feature = "structopt", structopt(long, env))]
     /// TLS client certificate file in PEM format
-    pub tls_cert_file: Option<String>,
+    pub tls_cert_file: Option<OsString>,
 
     #[cfg_attr(feature = "structopt", structopt(long, env))]
     /// TLS client key file in PEM format
-    pub tls_key_file: Option<String>,
+    pub tls_key_file: Option<OsString>,
 }
 
 impl Default for TlsOptions {
@@ -42,21 +43,21 @@ impl TlsOptions {
 
         match &self.tls_ca_file {
             Some(f) if !Path::new(f).exists() => {
-                return Err(Error::msg(format!("Could not access TLS CA file: {}", f)))
+                return Err(Error::msg(format!("Could not access TLS CA file: {:?}", f)))
             }
             _ => (),
         }
 
         match &self.tls_cert_file {
             Some(f) if !Path::new(f).exists() => {
-                return Err(Error::msg(format!("Could not access TLS cert file: {}", f)))
+                return Err(Error::msg(format!("Could not access TLS cert file: {:?}", f)))
             }
             _ => (),
         }
 
         match &self.tls_key_file {
             Some(f) if !Path::new(f).exists() => {
-                return Err(Error::msg(format!("Could not access TLS key file: {}", f)))
+                return Err(Error::msg(format!("Could not access TLS key file: {:?}", f)))
             }
             _ => (),
         }

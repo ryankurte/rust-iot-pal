@@ -85,7 +85,7 @@ impl ElasticStore {
 
         // Load CA if provided
         if let Some(f) = &o.tls_opts.tls_ca_file {
-            debug!("loading TLS CA certificate: {}", f);
+            debug!("loading TLS CA certificate: {:?}", f);
 
             let ca = fs::read_to_string(f)?;
             let ca = Certificate::from_pem(ca.as_bytes())?;
@@ -96,7 +96,7 @@ impl ElasticStore {
         // Load client certificate and keys if provided
         match (&o.tls_opts.tls_cert_file, &o.tls_opts.tls_key_file) {
             (Some(c), Some(k)) => {
-                debug!("Loading TLS client cert / key: {} {}", c, k);
+                debug!("Loading TLS client cert / key: {:?} {:?}", c, k);
 
                 // Read files
                 let mut cert = fs::read(c)?;
