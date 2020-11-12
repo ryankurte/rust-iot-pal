@@ -1,7 +1,6 @@
 //! IoT Protocol Abstraction Library
 
 use std::path::Path;
-use std::ffi::OsString;
 
 use anyhow::Error;
 
@@ -17,15 +16,15 @@ pub mod stores;
 pub struct TlsOptions {
     #[cfg_attr(feature = "structopt", structopt(long, env))]
     /// TLS Certiciate Authority (CA) file in PEM format
-    pub tls_ca_file: Option<OsString>,
+    pub tls_ca_file: Option<String>,
 
     #[cfg_attr(feature = "structopt", structopt(long, env))]
     /// TLS client certificate file in PEM format
-    pub tls_cert_file: Option<OsString>,
+    pub tls_cert_file: Option<String>,
 
     #[cfg_attr(feature = "structopt", structopt(long, env))]
     /// TLS client key file in PEM format
-    pub tls_key_file: Option<OsString>,
+    pub tls_key_file: Option<String>,
 }
 
 impl Default for TlsOptions {
